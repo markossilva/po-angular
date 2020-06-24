@@ -142,6 +142,46 @@ describe('PoPageJobSchedulerComponent:', () => {
         expect(component.jobSchedulerActions.length).toBe(component['concludePageActions'].length);
       });
 
+      it(`should set 'publicValues' and should hide when 'secret' is true`, () => {
+        const nextStep = component.steps.length;
+        const currentStep = 2;
+        const expectedValue = { password: '***' };
+
+        component.model = {
+          executionParameter: { password: '123' },
+          periodicity: 'always',
+          firstExecution: new Date(),
+          firstExecutionHour: '23:55:00',
+          recurrent: true
+        };
+        component.parameters = [{ property: 'password', secret: true }];
+
+        component['changePageActionsBySteps'](currentStep, nextStep);
+
+        expect(component.jobSchedulerActions.length).toBe(component['concludePageActions'].length);
+        expect(component.publicValues.executionParameter).toEqual(expectedValue);
+      });
+
+      it(`should set 'publicValues' and shouldn't hide when 'secret' is false`, () => {
+        const nextStep = component.steps.length;
+        const currentStep = 2;
+        const expectedValue = { password: '123' };
+
+        component.model = {
+          executionParameter: { password: '123' },
+          periodicity: 'always',
+          firstExecution: new Date(),
+          firstExecutionHour: '23:55:00',
+          recurrent: true
+        };
+        component.parameters = [{ property: 'password', secret: false }];
+
+        component['changePageActionsBySteps'](currentStep, nextStep);
+
+        expect(component.jobSchedulerActions.length).toBe(component['concludePageActions'].length);
+        expect(component.publicValues.executionParameter).toEqual(expectedValue);
+      });
+
       it(`should set 'jobSchedulerActions' with 'nextPageActions' if
       'currentStep' is equal 'steps.length' and 'stepNumber' is lower than 'currentStep'`, () => {
         const currentStep = component.steps.length;
