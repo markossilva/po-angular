@@ -157,6 +157,10 @@ export abstract class PoPageDynamicSearchBaseComponent {
   @Input('p-keep-filters')
   keepFilters: boolean = false;
 
+  @InputBoolean()
+  @Input('p-concat-filters')
+  concatFilters: boolean = false;
+
   /**
    * Função ou serviço que será executado na inicialização do componente.
    *

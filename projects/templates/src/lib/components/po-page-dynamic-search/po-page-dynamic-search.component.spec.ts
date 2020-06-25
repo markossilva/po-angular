@@ -580,4 +580,77 @@ describe('PoPageDynamicSearchComponent:', () => {
       }));
     });
   });
+
+  describe('Integration:', () => {
+    it(`should add quickSearch and advanced filter in disclaimers if concat-filters is true and advanced filter is defined`, () => {
+      component.concatFilters = true;
+
+      component.filters = [{ property: 'city', initValue: 'Ontario' }];
+
+      component.literals.quickSearchLabel = 'Search';
+      component['quickFilter'] = 'Chicago';
+      component.onAction();
+
+      const currentDisclaimers = [
+        { label: 'City: Ontario', value: 'Ontario', property: 'city' },
+        { property: 'search', label: `Search Chicago`, value: 'Chicago' }
+      ];
+
+      expect(component.disclaimerGroup.disclaimers).toEqual(currentDisclaimers);
+    });
+
+    it(`should add advanced filter and quickSearch updated in disclaimers if concat-filters is true and advanced filter is defined`, () => {
+      component.concatFilters = true;
+
+      component.filters = [{ property: 'city', initValue: 'Ontario' }];
+
+      component.literals.quickSearchLabel = 'Search';
+      component['quickFilter'] = 'Chicago';
+      component.onAction();
+
+      component['quickFilter'] = 'Test';
+      component.onAction();
+
+      const currentDisclaimers = [
+        { label: 'City: Ontario', value: 'Ontario', property: 'city' },
+        { property: 'search', label: `Search Test`, value: 'Test' }
+      ];
+
+      expect(component.disclaimerGroup.disclaimers).toEqual(currentDisclaimers);
+    });
+
+    it(`should add advanced search and remove quickSearch in disclaimers if concat-filters is false`, () => {
+      component.concatFilters = false;
+
+      component.literals.quickSearchLabel = 'Search';
+      component['quickFilter'] = 'Chicago';
+      component.onAction();
+      const disclaimersWithQuickFilter = [{ property: 'search', label: `Search Chicago`, value: 'Chicago' }];
+
+      expect(component.disclaimerGroup.disclaimers).toEqual(disclaimersWithQuickFilter);
+
+      const disclaimersWithAdvancedSearch = [{ label: 'City: Ontario', value: 'Ontario', property: 'city' }];
+
+      component.filters = [{ property: 'city', initValue: 'Ontario' }];
+
+      expect(component.disclaimerGroup.disclaimers).toEqual(disclaimersWithAdvancedSearch);
+    });
+
+    it(`should add advanced search and remove quickSearch in disclaimers if concat-filters is true`, () => {
+      component.concatFilters = true;
+
+      component.literals.quickSearchLabel = 'Search';
+      component['quickFilter'] = 'Chicago';
+      component.onAction();
+      const disclaimersWithQuickFilter = [{ property: 'search', label: `Search Chicago`, value: 'Chicago' }];
+
+      expect(component.disclaimerGroup.disclaimers).toEqual(disclaimersWithQuickFilter);
+
+      const disclaimersWithAdvancedSearch = [{ label: 'City: Ontario', value: 'Ontario', property: 'city' }];
+
+      component.filters = [{ property: 'city', initValue: 'Ontario' }];
+
+      expect(component.disclaimerGroup.disclaimers).toEqual(disclaimersWithAdvancedSearch);
+    });
+  });
 });
