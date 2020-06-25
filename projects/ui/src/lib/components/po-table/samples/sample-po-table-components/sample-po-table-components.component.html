@@ -10,6 +10,7 @@
   [p-sort]="true"
   (p-show-more)="showMore($event)"
   (p-sort-by)="sort($event)"
+  [p-loading]="isLoading"
 >
   <ng-template p-table-column-template [p-property]="'type'" let-value>
     <div class="badge {{ value }}">{{ value | uppercase }}</div>
